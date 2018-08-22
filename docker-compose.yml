@@ -1,39 +1,13 @@
 version: '2'
-volumes:
-    xauth:
-    x11-unix:
 services:
     geckodriver:
-        build:
-            context: .
-        volumes:
-            - /etc/machine-id:/etc/machine-id
-            - xauth:/tmp/xauth
-            - x11-unix:/tmp/.X11-unix
-        ports:
-            - 4444:4444
+        build: .
         environment:
-            DISPLAY: :0
-            XAUTHORITY: /tmp/xauth/Xauthority
-    xvfb:
-        image: quay.io/cvlibrary/xvfb
-        volumes:
-            - xauth:/tmp/xauth
-            - x11-unix:/tmp/.X11-unix
-        # FIXME: what we really want is for x11vnc to use the xvfb container's
-        # ipc namespace.  For now we just share both with the host.
-        ipc: "host"
-        command: -screen 0 1920x1080x24
-    x11vnc:
-        image: quay.io/cvlibrary/x11vnc
-        depends_on:
-            - xvfb
-        volumes:
-            - xauth:/tmp/xauth
-            - x11-unix:/tmp/.X11-unix
-        command: -q -nopw -auth /tmp/xauth/Xauthority
-        environment:
-            DISPLAY: :0
-        ipc: "host"
-        ports:
-            - 5900:5900
+            - VNC_ENABLED=true
+            - EXPOSE_X11=true
+        expose:
+            - '4444'
+            - '2828'
+            - '5900'
+        shm_size: 2g
+        command: 'geckodriver --port=4444 --host 0.0.0.0 --log debug --marionette-port 2828'
