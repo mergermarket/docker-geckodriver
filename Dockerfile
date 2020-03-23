@@ -12,12 +12,10 @@ RUN apt-get update && \
     ca-certificates \
     x11vnc \
     fluxbox \
-    xvt \
     curl \
-    nano \
     firefox \
  && rm -fr /var/lib/apt/lists/* \
- && curl -L https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz | tar xz -C /usr/local/bin \
+ && curl -L https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz | tar xz -C /usr/local/bin \
  && export TINI_VERSION=v0.14.0 \
  && curl -sL https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini > /sbin/tini \
  && chmod +x /sbin/tini
